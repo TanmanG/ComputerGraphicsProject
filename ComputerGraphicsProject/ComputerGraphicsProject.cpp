@@ -114,6 +114,244 @@ public:
     }
 };
 
+class Matrix4x4
+{
+    float values[4][4];
+
+    Matrix4x4(float(&initValues)[4][4]) {
+        values[0][0] = initValues[0][0];
+        values[0][1] = initValues[0][1];
+        values[0][2] = initValues[0][2];
+        values[0][3] = initValues[0][3];
+
+        values[1][0] = initValues[1][0];
+        values[1][1] = initValues[1][1];
+        values[1][2] = initValues[1][2];
+        values[1][3] = initValues[1][3];
+
+        values[2][0] = initValues[2][0];
+        values[2][1] = initValues[2][1];
+        values[2][2] = initValues[2][2];
+        values[2][3] = initValues[2][3];
+
+        values[3][0] = initValues[3][0];
+        values[3][1] = initValues[3][1];
+        values[3][2] = initValues[3][2];
+        values[3][3] = initValues[3][3];
+    }
+
+    void Add(Matrix4x4 const& matrix) {
+        auto matrixValues = matrix.values;
+
+        values[0][0] += matrixValues[0][0];
+        values[0][1] += matrixValues[0][1];
+        values[0][2] += matrixValues[0][2];
+        values[0][3] += matrixValues[0][3];
+
+        values[1][0] += matrixValues[1][0];
+        values[1][1] += matrixValues[1][1];
+        values[1][2] += matrixValues[1][2];
+        values[1][3] += matrixValues[1][3];
+
+        values[2][0] += matrixValues[2][0];
+        values[2][1] += matrixValues[2][1];
+        values[2][2] += matrixValues[2][2];
+        values[2][3] += matrixValues[2][3];
+
+        values[3][0] += matrixValues[3][0];
+        values[3][1] += matrixValues[3][1];
+        values[3][2] += matrixValues[3][2];
+        values[3][3] += matrixValues[3][3];
+    }
+    void Subtract(Matrix4x4 const& matrix) {
+        auto matrixValues = matrix.values;
+
+        values[0][0] -= matrixValues[0][0];
+        values[0][1] -= matrixValues[0][1];
+        values[0][2] -= matrixValues[0][2];
+        values[0][3] -= matrixValues[0][3];
+
+        values[1][0] -= matrixValues[1][0];
+        values[1][1] -= matrixValues[1][1];
+        values[1][2] -= matrixValues[1][2];
+        values[1][3] -= matrixValues[1][3];
+
+        values[2][0] -= matrixValues[2][0];
+        values[2][1] -= matrixValues[2][1];
+        values[2][2] -= matrixValues[2][2];
+        values[2][3] -= matrixValues[2][3];
+
+        values[3][0] -= matrixValues[3][0];
+        values[3][1] -= matrixValues[3][1];
+        values[3][2] -= matrixValues[3][2];
+        values[3][3] -= matrixValues[3][3];
+    }
+    void Multiply(Matrix4x4 const& matrix) {
+        auto calculatedMatrix = *this - matrix;
+        
+        values[0][0] = calculatedMatrix->values[0][0];
+        values[0][1] = calculatedMatrix->values[0][1];
+        values[0][2] = calculatedMatrix->values[0][2];
+        values[0][3] = calculatedMatrix->values[0][3];
+
+        values[1][0] = calculatedMatrix->values[1][0];
+        values[1][1] = calculatedMatrix->values[1][1];
+        values[1][2] = calculatedMatrix->values[1][2];
+        values[1][3] = calculatedMatrix->values[1][3];
+
+        values[2][0] = calculatedMatrix->values[2][0];
+        values[2][1] = calculatedMatrix->values[2][1];
+        values[2][2] = calculatedMatrix->values[2][2];
+        values[2][3] = calculatedMatrix->values[2][3];
+
+        values[3][0] = calculatedMatrix->values[3][0];
+        values[3][1] = calculatedMatrix->values[3][1];
+        values[3][2] = calculatedMatrix->values[3][2];
+        values[3][3] = calculatedMatrix->values[3][3];
+    }
+
+    unique_ptr<Matrix4x4> operator + (Matrix4x4 const& matrix) {
+        auto matrixValues = matrix.values;
+        float vals[4][4] = {};
+
+        vals[0][0] = values[0][0] + matrixValues[0][0];
+        vals[0][1] = values[0][1] + matrixValues[0][1];
+        vals[0][2] = values[0][2] + matrixValues[0][2];
+        vals[0][3] = values[0][3] + matrixValues[0][3];
+
+        vals[1][0] = values[1][0] + matrixValues[1][0];
+        vals[1][1] = values[1][1] + matrixValues[1][1];
+        vals[1][2] = values[1][2] + matrixValues[1][2];
+        vals[1][3] = values[1][3] + matrixValues[1][3];
+
+        vals[2][0] = values[2][0] + matrixValues[2][0];
+        vals[2][1] = values[2][1] + matrixValues[2][1];
+        vals[2][2] = values[2][2] + matrixValues[2][2];
+        vals[2][3] = values[2][3] + matrixValues[2][3];
+
+        vals[3][0] = values[3][0] + matrixValues[3][0];
+        vals[3][1] = values[3][1] + matrixValues[3][1];
+        vals[3][2] = values[3][2] + matrixValues[3][2];
+        vals[3][3] = values[3][3] + matrixValues[3][3];
+        
+        return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
+    }
+    unique_ptr<Matrix4x4> operator - (Matrix4x4 const& matrix) {
+        auto matrixValues = matrix.values;
+        float vals[4][4] = {};
+
+        vals[0][0] = values[0][0] - matrixValues[0][0];
+        vals[0][1] = values[0][1] - matrixValues[0][1];
+        vals[0][2] = values[0][2] - matrixValues[0][2];
+        vals[0][3] = values[0][3] - matrixValues[0][3];
+
+        vals[1][0] = values[1][0] - matrixValues[1][0];
+        vals[1][1] = values[1][1] - matrixValues[1][1];
+        vals[1][2] = values[1][2] - matrixValues[1][2];
+        vals[1][3] = values[1][3] - matrixValues[1][3];
+
+        vals[2][0] = values[2][0] - matrixValues[2][0];
+        vals[2][1] = values[2][1] - matrixValues[2][1];
+        vals[2][2] = values[2][2] - matrixValues[2][2];
+        vals[2][3] = values[2][3] - matrixValues[2][3];
+
+        vals[3][0] = values[3][0] - matrixValues[3][0];
+        vals[3][1] = values[3][1] - matrixValues[3][1];
+        vals[3][2] = values[3][2] - matrixValues[3][2];
+        vals[3][3] = values[3][3] - matrixValues[3][3];
+
+        return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
+    }
+    unique_ptr<Matrix4x4> operator * (Matrix4x4 const& matrix) {
+        auto matrixValues = matrix.values;
+        float vals[4][4] = {};
+
+        // Row 1
+        vals[0][0] = values[0][0] * matrixValues[0][0] 
+                    + values[1][0] * matrixValues[0][1]
+                    + values[2][0] * matrixValues[0][2]
+                    + values[3][0] * matrixValues[0][3];
+
+        vals[1][0] = values[0][0] * matrixValues[1][0]
+                    + values[1][0] * matrixValues[1][1]
+                    + values[2][0] * matrixValues[1][2]
+                    + values[3][0] * matrixValues[1][3];
+
+        vals[2][0] = values[0][0] * matrixValues[2][0]
+                    + values[1][0] * matrixValues[2][1]
+                    + values[2][0] * matrixValues[2][2]
+                    + values[3][0] * matrixValues[2][3];
+
+        vals[3][0] = values[0][0] * matrixValues[3][0]
+                    + values[1][0] * matrixValues[3][1]
+                    + values[2][0] * matrixValues[3][2]
+                    + values[3][0] * matrixValues[3][3];
+
+        // Row 2
+        vals[0][1] = values[0][1] * matrixValues[0][0] 
+                    + values[1][1] * matrixValues[0][1]
+                    + values[2][1] * matrixValues[0][2]
+                    + values[3][1] * matrixValues[0][3];
+
+        vals[1][1] = values[0][1] * matrixValues[1][0]
+                    + values[1][1] * matrixValues[1][1]
+                    + values[2][1] * matrixValues[1][2]
+                    + values[3][1] * matrixValues[1][3];
+
+        vals[2][1] = values[0][1] * matrixValues[2][0]
+                    + values[1][1] * matrixValues[2][1]
+                    + values[2][1] * matrixValues[2][2]
+                    + values[3][1] * matrixValues[2][3];
+
+        vals[3][1] = values[0][1] * matrixValues[3][0]
+                    + values[1][1] * matrixValues[3][1]
+                    + values[2][1] * matrixValues[3][2]
+                    + values[3][1] * matrixValues[3][3];
+        // Row 3
+        vals[0][1] = values[0][2] * matrixValues[0][0] 
+                    + values[1][2] * matrixValues[0][1]
+                    + values[2][2] * matrixValues[0][2]
+                    + values[3][2] * matrixValues[0][3];
+
+        vals[1][1] = values[0][2] * matrixValues[1][0]
+                    + values[1][2] * matrixValues[1][1]
+                    + values[2][2] * matrixValues[1][2]
+                    + values[3][2] * matrixValues[1][3];
+
+        vals[2][1] = values[0][2] * matrixValues[2][0]
+                    + values[1][2] * matrixValues[2][1]
+                    + values[2][2] * matrixValues[2][2]
+                    + values[3][2] * matrixValues[2][3];
+
+        vals[3][1] = values[0][2] * matrixValues[3][0]
+                    + values[1][2] * matrixValues[3][1]
+                    + values[2][2] * matrixValues[3][2]
+                    + values[3][2] * matrixValues[3][3];
+        // Row 4
+        vals[0][1] = values[0][3] * matrixValues[0][0] 
+                    + values[1][3] * matrixValues[0][1]
+                    + values[2][3] * matrixValues[0][2]
+                    + values[3][3] * matrixValues[0][3];
+
+        vals[1][1] = values[0][3] * matrixValues[1][0]
+                    + values[1][3] * matrixValues[1][1]
+                    + values[2][3] * matrixValues[1][2]
+                    + values[3][3] * matrixValues[1][3];
+
+        vals[2][1] = values[0][3] * matrixValues[2][0]
+                    + values[1][3] * matrixValues[2][1]
+                    + values[2][3] * matrixValues[2][2]
+                    + values[3][3] * matrixValues[2][3];
+
+        vals[3][1] = values[0][3] * matrixValues[3][0]
+                    + values[1][3] * matrixValues[3][1]
+                    + values[2][3] * matrixValues[3][2]
+                    + values[3][3] * matrixValues[3][3];
+
+        return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
+    }
+    // To-do: Implement matrix.inverse (this will be a doozie)
+};
 
 // Declare & Initialize the cube
 Vector3 cubeVertices[8]{ // As viewed from -z toward +z, TY & TX axes
@@ -131,18 +369,18 @@ Vector3 cubeVertices[8]{ // As viewed from -z toward +z, TY & TX axes
 Vector3 cameraPosition{
     {3}, // X
     {1}, // Y
-    {-3},  // Z
+    {-3},// Z
 };
 
 Vector3 cameraLookDirection{
-    {-1}, // X
+    {-1},// X
     {0}, // Y
     {1}, // Z
 };
 
 // Declare & Initialize Screen Resolution
-const int screen_width = 44;
-const int screen_height = 30;
+const int screen_width = 88;
+const int screen_height = 60;
 
 void MoveCamera();
 void RenderFrame();
@@ -233,6 +471,6 @@ void RenderFrame() {
         cout << pixels[i] << endl;
     }
 
-    // Emulate 30 FPS
-    Sleep(100);
+    // Emulate 20 FPS
+    Sleep(50);
 }
