@@ -1,12 +1,12 @@
 ﻿  ComputerGraphicsProject.cpp
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(290,63): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(293,62): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(296,62): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(299,63): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(302,63): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(305,64): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(308,72): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(311,73): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(314,73): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(317,72): warning C4305: 'argument': truncation from 'double' to 'float'
-  ComputerGraphicsProject.vcxproj -> D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\x64\Debug\ComputerGraphicsProject.exe
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(542,1): error C2111: '+': pointer addition requires integral operand
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(604,63): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(607,62): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(610,62): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(613,63): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(616,63): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(619,64): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(622,72): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(625,73): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(628,73): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(631,72): warning C4305: 'argument': truncation from 'double' to 'float'

@@ -116,6 +116,7 @@ public:
 
 class Matrix4x4
 {
+public:
     float values[4][4] = {};
 
     Matrix4x4(float(&initValues)[4][4]) {
@@ -154,223 +155,390 @@ class Matrix4x4
         // Row 1
         float* currRowA = values[0];
         float* currRowB = &matrixValues[0];
-        currRowA[0] = currRowB[0];
-        currRowA[1] = currRowB[1];
-        currRowA[2] = currRowB[2];
-        currRowA[3] = currRowB[3];
+        currRowA[0] += currRowB[0];
+        currRowA[1] += currRowB[1];
+        currRowA[2] += currRowB[2];
+        currRowA[3] += currRowB[3];
 
         // Row 2
         currRowA = values[1];
-        float* currRowB = &matrixValues[1];
-        currRowA[0] = currRowB[0];
-        currRowA[1] = currRowB[1];
-        currRowA[2] = currRowB[2];
-        currRowA[3] = currRowB[3];
+        currRowB = &matrixValues[1];
+        currRowA[0] += currRowB[0];
+        currRowA[1] += currRowB[1];
+        currRowA[2] += currRowB[2];
+        currRowA[3] += currRowB[3];
 
         // Row 3
         currRowA = values[2];
-        float* currRowB = &matrixValues[2];
-        currRowA[0] = currRowB[0];
-        currRowA[1] = currRowB[1];
-        currRowA[2] = currRowB[2];
-        currRowA[3] = currRowB[3];
+        currRowB = &matrixValues[2];
+        currRowA[0] += currRowB[0];
+        currRowA[1] += currRowB[1];
+        currRowA[2] += currRowB[2];
+        currRowA[3] += currRowB[3];
 
         // Row 4
         currRowA = values[3];
-        float* currRowB = &matrixValues[3];
-        currRowA[0] = currRowB[0];
-        currRowA[1] = currRowB[1];
-        currRowA[2] = currRowB[2];
-        currRowA[3] = currRowB[3];
+        currRowB = &matrixValues[3];
+        currRowA[0] += currRowB[0];
+        currRowA[1] += currRowB[1];
+        currRowA[2] += currRowB[2];
+        currRowA[3] += currRowB[3];
     }
     void Subtract(Matrix4x4 const& matrix) {
-        auto matrixValues = matrix.values;
+        float* matrixValues = (float*)(matrix.values);
 
-        values[0][0] -= matrixValues[0][0];
-        values[0][1] -= matrixValues[0][1];
-        values[0][2] -= matrixValues[0][2];
-        values[0][3] -= matrixValues[0][3];
+        // Row 1
+        float* currRowA = values[0];
+        float* currRowB = &matrixValues[0];
+        currRowA[0] -= currRowB[0];
+        currRowA[1] -= currRowB[1];
+        currRowA[2] -= currRowB[2];
+        currRowA[3] -= currRowB[3];
 
-        values[1][0] -= matrixValues[1][0];
-        values[1][1] -= matrixValues[1][1];
-        values[1][2] -= matrixValues[1][2];
-        values[1][3] -= matrixValues[1][3];
+        // Row 2
+        currRowA = values[1];
+        currRowB = &matrixValues[1];
+        currRowA[0] -= currRowB[0];
+        currRowA[1] -= currRowB[1];
+        currRowA[2] -= currRowB[2];
+        currRowA[3] -= currRowB[3];
 
-        values[2][0] -= matrixValues[2][0];
-        values[2][1] -= matrixValues[2][1];
-        values[2][2] -= matrixValues[2][2];
-        values[2][3] -= matrixValues[2][3];
+        // Row 3
+        currRowA = values[2];
+        currRowB = &matrixValues[2];
+        currRowA[0] -= currRowB[0];
+        currRowA[1] -= currRowB[1];
+        currRowA[2] -= currRowB[2];
+        currRowA[3] -= currRowB[3];
 
-        values[3][0] -= matrixValues[3][0];
-        values[3][1] -= matrixValues[3][1];
-        values[3][2] -= matrixValues[3][2];
-        values[3][3] -= matrixValues[3][3];
+        // Row 4
+        currRowA = values[3];
+        currRowB = &matrixValues[3];
+        currRowA[0] -= currRowB[0];
+        currRowA[1] -= currRowB[1];
+        currRowA[2] -= currRowB[2];
+        currRowA[3] -= currRowB[3];
     }
     void Multiply(Matrix4x4 const& matrix) {
-        auto calculatedMatrix = *this - matrix;
-        
-        values[0][0] = calculatedMatrix->values[0][0];
-        values[0][1] = calculatedMatrix->values[0][1];
-        values[0][2] = calculatedMatrix->values[0][2];
-        values[0][3] = calculatedMatrix->values[0][3];
+        float* matrixValues = (float*)(matrix.values);
+        float vals[4][4] = {};
 
-        values[1][0] = calculatedMatrix->values[1][0];
-        values[1][1] = calculatedMatrix->values[1][1];
-        values[1][2] = calculatedMatrix->values[1][2];
-        values[1][3] = calculatedMatrix->values[1][3];
+        // Source matrix row 1
+        float* currCol = &matrixValues[0];
+        vals[0][0] = values[0][0] * currCol[0]
+            + values[1][0] * currCol[1]
+            + values[2][0] * currCol[2]
+            + values[3][0] * currCol[3];
+        vals[0][1] = values[0][1] * currCol[0]
+            + values[1][1] * currCol[1]
+            + values[2][1] * currCol[2]
+            + values[3][1] * currCol[3];
+        vals[0][2] = values[0][2] * currCol[0]
+            + values[1][2] * currCol[1]
+            + values[2][2] * currCol[2]
+            + values[3][2] * currCol[3];
+        vals[0][3] = values[0][3] * currCol[0]
+            + values[1][3] * currCol[1]
+            + values[2][3] * currCol[2]
+            + values[3][3] * currCol[3];
 
-        values[2][0] = calculatedMatrix->values[2][0];
-        values[2][1] = calculatedMatrix->values[2][1];
-        values[2][2] = calculatedMatrix->values[2][2];
-        values[2][3] = calculatedMatrix->values[2][3];
+        // Source matrix row 2
+        currCol = &matrixValues[1];
+        vals[1][0] = values[0][0] * currCol[0]
+            + values[1][0] * currCol[1]
+            + values[2][0] * currCol[2]
+            + values[3][0] * currCol[3];
+        vals[1][1] = values[0][1] * currCol[0]
+            + values[1][1] * currCol[1]
+            + values[2][1] * currCol[2]
+            + values[3][1] * currCol[3];
+        vals[1][2] = values[0][2] * currCol[0]
+            + values[1][2] * currCol[1]
+            + values[2][2] * currCol[2]
+            + values[3][2] * currCol[3];
+        vals[1][3] = values[0][3] * currCol[0]
+            + values[1][3] * currCol[1]
+            + values[2][3] * currCol[2]
+            + values[3][3] * currCol[3];
 
-        values[3][0] = calculatedMatrix->values[3][0];
-        values[3][1] = calculatedMatrix->values[3][1];
-        values[3][2] = calculatedMatrix->values[3][2];
-        values[3][3] = calculatedMatrix->values[3][3];
+        // Source matrix row 3
+        currCol = &matrixValues[2];
+        vals[2][0] = values[0][0] * currCol[0]
+            + values[1][0] * currCol[1]
+            + values[2][0] * currCol[2]
+            + values[3][0] * currCol[3];
+        vals[2][1] = values[0][1] * currCol[0]
+            + values[1][1] * currCol[1]
+            + values[2][1] * currCol[2]
+            + values[3][1] * currCol[3];
+        vals[2][2] = values[0][2] * currCol[0]
+            + values[1][2] * currCol[1]
+            + values[2][2] * currCol[2]
+            + values[3][2] * currCol[3];
+        vals[2][3] = values[0][3] * currCol[0]
+            + values[1][3] * currCol[1]
+            + values[2][3] * currCol[2]
+            + values[3][3] * currCol[3];
+
+        // Source matrix row 4
+        currCol = &matrixValues[3];
+        vals[3][0] = values[0][0] * currCol[0]
+            + values[1][0] * currCol[1]
+            + values[2][0] * currCol[2]
+            + values[3][0] * currCol[3];
+        vals[3][1] = values[0][1] * currCol[0]
+            + values[1][1] * currCol[1]
+            + values[2][1] * currCol[2]
+            + values[3][1] * currCol[3];
+        vals[3][2] = values[0][2] * currCol[0]
+            + values[1][2] * currCol[1]
+            + values[2][2] * currCol[2]
+            + values[3][2] * currCol[3];
+        vals[3][3] = values[0][3] * currCol[0]
+            + values[1][3] * currCol[1]
+            + values[2][3] * currCol[2]
+            + values[3][3] * currCol[3];
+
+        // Assign the calculated multiplications to this
+        float* currColLeft = values[0];
+        currCol = vals[0];
+        currColLeft[0] = currCol[0];
+        currColLeft[1] = currCol[1];
+        currColLeft[2] = currCol[2];
+        currColLeft[3] = currCol[3];
+
+        currColLeft = values[1];
+        currCol = vals[1];
+        currColLeft[0] = currCol[0];
+        currColLeft[1] = currCol[1];
+        currColLeft[2] = currCol[2];
+        currColLeft[3] = currCol[3];
+
+        currColLeft = values[2];
+        currCol = vals[2];
+        currColLeft[0] = currCol[0];
+        currColLeft[1] = currCol[1];
+        currColLeft[2] = currCol[2];
+        currColLeft[3] = currCol[3];
+
+        currColLeft = values[3];
+        currCol = vals[3];
+        currColLeft[0] = currCol[0];
+        currColLeft[1] = currCol[1];
+        currColLeft[2] = currCol[2];
+        currColLeft[3] = currCol[3];
     }
 
     unique_ptr<Matrix4x4> operator + (Matrix4x4 const& matrix) {
         auto matrixValues = matrix.values;
         float vals[4][4] = {};
 
-        vals[0][0] = values[0][0] + matrixValues[0][0];
-        vals[0][1] = values[0][1] + matrixValues[0][1];
-        vals[0][2] = values[0][2] + matrixValues[0][2];
-        vals[0][3] = values[0][3] + matrixValues[0][3];
+        float* currColAssign = vals[0];
+        float* currColLeft = values[0];
+        float const* currColRight = matrixValues[0];
+        currColAssign[0] = currColLeft[0] + currColRight[0];
+        currColAssign[1] = currColLeft[1] + currColRight[1];
+        currColAssign[2] = currColLeft[2] + currColRight[2];
+        currColAssign[3] = currColLeft[3] + currColRight[3];
 
-        vals[1][0] = values[1][0] + matrixValues[1][0];
-        vals[1][1] = values[1][1] + matrixValues[1][1];
-        vals[1][2] = values[1][2] + matrixValues[1][2];
-        vals[1][3] = values[1][3] + matrixValues[1][3];
+        currColAssign = vals[1];
+        currColLeft = values[1];
+        currColRight = matrixValues[1];
+        currColAssign[0] = currColLeft[0] + currColRight[0];
+        currColAssign[1] = currColLeft[1] + currColRight[1];
+        currColAssign[2] = currColLeft[2] + currColRight[2];
+        currColAssign[3] = currColLeft[3] + currColRight[3];
 
-        vals[2][0] = values[2][0] + matrixValues[2][0];
-        vals[2][1] = values[2][1] + matrixValues[2][1];
-        vals[2][2] = values[2][2] + matrixValues[2][2];
-        vals[2][3] = values[2][3] + matrixValues[2][3];
+        currColAssign = vals[2];
+        currColLeft = values[2];
+        currColRight = matrixValues[2];
+        currColAssign[0] = currColLeft[0] + currColRight[0];
+        currColAssign[1] = currColLeft[1] + currColRight[1];
+        currColAssign[2] = currColLeft[2] + currColRight[2];
+        currColAssign[3] = currColLeft[3] + currColRight[3];
 
-        vals[3][0] = values[3][0] + matrixValues[3][0];
-        vals[3][1] = values[3][1] + matrixValues[3][1];
-        vals[3][2] = values[3][2] + matrixValues[3][2];
-        vals[3][3] = values[3][3] + matrixValues[3][3];
-        
+        currColAssign = vals[3];
+        currColLeft = values[3];
+        currColRight = matrixValues[3];
+        currColAssign[0] = currColLeft[0] + currColRight[0];
+        currColAssign[1] = currColLeft[1] + currColRight[1];
+        currColAssign[2] = currColLeft[2] + currColRight[2];
+        currColAssign[3] = currColLeft[3] + currColRight[3];
+
         return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
     }
     unique_ptr<Matrix4x4> operator - (Matrix4x4 const& matrix) {
         auto matrixValues = matrix.values;
         float vals[4][4] = {};
 
-        vals[0][0] = values[0][0] - matrixValues[0][0];
-        vals[0][1] = values[0][1] - matrixValues[0][1];
-        vals[0][2] = values[0][2] - matrixValues[0][2];
-        vals[0][3] = values[0][3] - matrixValues[0][3];
+        float* currColAssign = vals[0];
+        float* currColLeft = values[0];
+        float const* currColRight = matrixValues[0];
+        currColAssign[0] = currColLeft[0] - currColRight[0];
+        currColAssign[1] = currColLeft[1] - currColRight[1];
+        currColAssign[2] = currColLeft[2] - currColRight[2];
+        currColAssign[3] = currColLeft[3] - currColRight[3];
 
-        vals[1][0] = values[1][0] - matrixValues[1][0];
-        vals[1][1] = values[1][1] - matrixValues[1][1];
-        vals[1][2] = values[1][2] - matrixValues[1][2];
-        vals[1][3] = values[1][3] - matrixValues[1][3];
+        currColAssign = vals[1];
+        currColLeft = values[1];
+        currColRight = matrixValues[1];
+        currColAssign[0] = currColLeft[0] - currColRight[0];
+        currColAssign[1] = currColLeft[1] - currColRight[1];
+        currColAssign[2] = currColLeft[2] - currColRight[2];
+        currColAssign[3] = currColLeft[3] - currColRight[3];
 
-        vals[2][0] = values[2][0] - matrixValues[2][0];
-        vals[2][1] = values[2][1] - matrixValues[2][1];
-        vals[2][2] = values[2][2] - matrixValues[2][2];
-        vals[2][3] = values[2][3] - matrixValues[2][3];
+        currColAssign = vals[2];
+        currColLeft = values[2];
+        currColRight = matrixValues[2];
+        currColAssign[0] = currColLeft[0] - currColRight[0];
+        currColAssign[1] = currColLeft[1] - currColRight[1];
+        currColAssign[2] = currColLeft[2] - currColRight[2];
+        currColAssign[3] = currColLeft[3] - currColRight[3];
 
-        vals[3][0] = values[3][0] - matrixValues[3][0];
-        vals[3][1] = values[3][1] - matrixValues[3][1];
-        vals[3][2] = values[3][2] - matrixValues[3][2];
-        vals[3][3] = values[3][3] - matrixValues[3][3];
+        currColAssign = vals[3];
+        currColLeft = values[3];
+        currColRight = matrixValues[3];
+        currColAssign[0] = currColLeft[0] - currColRight[0];
+        currColAssign[1] = currColLeft[1] - currColRight[1];
+        currColAssign[2] = currColLeft[2] - currColRight[2];
+        currColAssign[3] = currColLeft[3] - currColRight[3];
 
         return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
     }
     unique_ptr<Matrix4x4> operator * (Matrix4x4 const& matrix) {
-        auto matrixValues = matrix.values;
+        float* matrixValues = (float*)(matrix.values);
         float vals[4][4] = {};
 
-        // Row 1
-        vals[0][0] = values[0][0] * matrixValues[0][0] 
-                    + values[1][0] * matrixValues[0][1]
-                    + values[2][0] * matrixValues[0][2]
-                    + values[3][0] * matrixValues[0][3];
+        // Source matrix row 1
+        float* currCol = &matrixValues[0];
+        vals[0][0] = values[0][0] * currCol[0]
+                    + values[1][0] * currCol[1]
+                    + values[2][0] * currCol[2]
+                    + values[3][0] * currCol[3];
+        vals[0][1] = values[0][1] * currCol[0]
+                    + values[1][1] * currCol[1]
+                    + values[2][1] * currCol[2]
+                    + values[3][1] * currCol[3];
+        vals[0][2] = values[0][2] * currCol[0]
+                    + values[1][2] * currCol[1]
+                    + values[2][2] * currCol[2]
+                    + values[3][2] * currCol[3];
+        vals[0][3] = values[0][3] * currCol[0]
+                    + values[1][3] * currCol[1]
+                    + values[2][3] * currCol[2]
+                    + values[3][3] * currCol[3];
 
-        vals[1][0] = values[0][0] * matrixValues[1][0]
-                    + values[1][0] * matrixValues[1][1]
-                    + values[2][0] * matrixValues[1][2]
-                    + values[3][0] * matrixValues[1][3];
+        // Source matrix row 2
+        currCol = &matrixValues[1];
+        vals[1][0] = values[0][0] * currCol[0]
+                    + values[1][0] * currCol[1]
+                    + values[2][0] * currCol[2]
+                    + values[3][0] * currCol[3];
+        vals[1][1] = values[0][1] * currCol[0]
+                    + values[1][1] * currCol[1]
+                    + values[2][1] * currCol[2]
+                    + values[3][1] * currCol[3];
+        vals[1][2] = values[0][2] * currCol[0]
+                    + values[1][2] * currCol[1]
+                    + values[2][2] * currCol[2]
+                    + values[3][2] * currCol[3];
+        vals[1][3] = values[0][3] * currCol[0]
+                    + values[1][3] * currCol[1]
+                    + values[2][3] * currCol[2]
+                    + values[3][3] * currCol[3];
 
-        vals[2][0] = values[0][0] * matrixValues[2][0]
-                    + values[1][0] * matrixValues[2][1]
-                    + values[2][0] * matrixValues[2][2]
-                    + values[3][0] * matrixValues[2][3];
+        // Source matrix row 3
+        currCol = &matrixValues[2];
+        vals[2][0] = values[0][0] * currCol[0]
+                    + values[1][0] * currCol[1]
+                    + values[2][0] * currCol[2]
+                    + values[3][0] * currCol[3];
+        vals[2][1] = values[0][1] * currCol[0]
+                    + values[1][1] * currCol[1]
+                    + values[2][1] * currCol[2]
+                    + values[3][1] * currCol[3];
+        vals[2][2] = values[0][2] * currCol[0]
+                    + values[1][2] * currCol[1]
+                    + values[2][2] * currCol[2]
+                    + values[3][2] * currCol[3];
+        vals[2][3] = values[0][3] * currCol[0]
+                    + values[1][3] * currCol[1]
+                    + values[2][3] * currCol[2]
+                    + values[3][3] * currCol[3];
 
-        vals[3][0] = values[0][0] * matrixValues[3][0]
-                    + values[1][0] * matrixValues[3][1]
-                    + values[2][0] * matrixValues[3][2]
-                    + values[3][0] * matrixValues[3][3];
-
-        // Row 2
-        vals[0][1] = values[0][1] * matrixValues[0][0] 
-                    + values[1][1] * matrixValues[0][1]
-                    + values[2][1] * matrixValues[0][2]
-                    + values[3][1] * matrixValues[0][3];
-
-        vals[1][1] = values[0][1] * matrixValues[1][0]
-                    + values[1][1] * matrixValues[1][1]
-                    + values[2][1] * matrixValues[1][2]
-                    + values[3][1] * matrixValues[1][3];
-
-        vals[2][1] = values[0][1] * matrixValues[2][0]
-                    + values[1][1] * matrixValues[2][1]
-                    + values[2][1] * matrixValues[2][2]
-                    + values[3][1] * matrixValues[2][3];
-
-        vals[3][1] = values[0][1] * matrixValues[3][0]
-                    + values[1][1] * matrixValues[3][1]
-                    + values[2][1] * matrixValues[3][2]
-                    + values[3][1] * matrixValues[3][3];
-        // Row 3
-        vals[0][1] = values[0][2] * matrixValues[0][0] 
-                    + values[1][2] * matrixValues[0][1]
-                    + values[2][2] * matrixValues[0][2]
-                    + values[3][2] * matrixValues[0][3];
-
-        vals[1][1] = values[0][2] * matrixValues[1][0]
-                    + values[1][2] * matrixValues[1][1]
-                    + values[2][2] * matrixValues[1][2]
-                    + values[3][2] * matrixValues[1][3];
-
-        vals[2][1] = values[0][2] * matrixValues[2][0]
-                    + values[1][2] * matrixValues[2][1]
-                    + values[2][2] * matrixValues[2][2]
-                    + values[3][2] * matrixValues[2][3];
-
-        vals[3][1] = values[0][2] * matrixValues[3][0]
-                    + values[1][2] * matrixValues[3][1]
-                    + values[2][2] * matrixValues[3][2]
-                    + values[3][2] * matrixValues[3][3];
-        // Row 4
-        vals[0][1] = values[0][3] * matrixValues[0][0] 
-                    + values[1][3] * matrixValues[0][1]
-                    + values[2][3] * matrixValues[0][2]
-                    + values[3][3] * matrixValues[0][3];
-
-        vals[1][1] = values[0][3] * matrixValues[1][0]
-                    + values[1][3] * matrixValues[1][1]
-                    + values[2][3] * matrixValues[1][2]
-                    + values[3][3] * matrixValues[1][3];
-
-        vals[2][1] = values[0][3] * matrixValues[2][0]
-                    + values[1][3] * matrixValues[2][1]
-                    + values[2][3] * matrixValues[2][2]
-                    + values[3][3] * matrixValues[2][3];
-
-        vals[3][1] = values[0][3] * matrixValues[3][0]
-                    + values[1][3] * matrixValues[3][1]
-                    + values[2][3] * matrixValues[3][2]
-                    + values[3][3] * matrixValues[3][3];
+        // Source matrix row 4
+        currCol = &matrixValues[3];
+        vals[3][0] = values[0][0] * currCol[0]
+                    + values[1][0] * currCol[1]
+                    + values[2][0] * currCol[2]
+                    + values[3][0] * currCol[3];
+        vals[3][1] = values[0][1] * currCol[0]
+                    + values[1][1] * currCol[1]
+                    + values[2][1] * currCol[2]
+                    + values[3][1] * currCol[3];
+        vals[3][2] = values[0][2] * currCol[0]
+                    + values[1][2] * currCol[1]
+                    + values[2][2] * currCol[2]
+                    + values[3][2] * currCol[3];
+        vals[3][3] = values[0][3] * currCol[0]
+                    + values[1][3] * currCol[1]
+                    + values[2][3] * currCol[2]
+                    + values[3][3] * currCol[3];
 
         return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
     }
-    // To-do: Implement matrix.inverse (this will be a doozie)
+    
+    unique_ptr<Matrix4x4> Inverse() {
+        float inverse[4][4] = {};
+        float* currColRight;
+        float currColLeft;
+
+        // Pre-compute Cached Values for A~
+        currColRight = values[1];
+        currColLeft = values[0][0];
+        float cache_1122 = currColLeft * currColRight[1];
+        float cache_1123 = currColLeft * currColRight[2];
+        float cache_1124 = currColLeft * currColRight[3];
+
+        currColLeft = values[0][1];
+        float cache_1221 = currColLeft * currColRight[0];
+        float cache_1223 = currColLeft * currColRight[2];
+        float cache_1224 = currColLeft * currColRight[3];
+
+        currColLeft = values[0][2];
+        float cache_1322 = currColLeft * currColRight[1];
+        float cache_1324 = currColLeft * currColRight[3];
+
+        currColLeft = values[0][3];
+        float cache_1421 = currColLeft * currColRight[0];
+        float cache_1422 = currColLeft * currColRight[1];
+        float cache_1423 = currColLeft * currColRight[2];
+
+        currColRight = values[3];
+        currColLeft = values[2][0];
+        float cache_3142 = currColLeft * currColRight[1];
+        float cache_3143 = currColLeft * currColRight[2];
+        float cache_3144 = currColLeft * currColRight[3];
+
+        currColLeft = values[2][1];
+        float cache_3241 = currColLeft * currColRight[0];
+        float cache_3243 = currColLeft * currColRight[2];
+        float cache_3244 = currColLeft * currColRight[3];
+
+        currColLeft = values[2][2];
+        float cache_3341 = currColLeft * currColRight[0];
+        float cache_3342 = currColLeft * currColRight[1];
+        float cache_3344 = currColLeft * currColRight[3];
+
+        currColLeft = values[2][3];
+        float cache_3441 = currColLeft * currColRight[0];
+        float cache_3442 = currColLeft * currColRight[1];
+        float cache_3443 = currColLeft * currColRight[2];
+
+
+        // Compute A~
+        // TO-DO: FIX NOTATION, MATRIX NOTATION IS [Y, X] AAAAAHHHHHH
+    }
 };
 
 // Declare & Initialize the cube
@@ -407,13 +575,22 @@ void RenderFrame();
 
 int main()
 {
-    int i = 0;
+    /*
     while (true)
     {
         RenderFrame();
         
         MoveCamera();
     }
+    */
+    float testValues[4][4] = { {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, };
+
+    Matrix4x4 matrixA = Matrix4x4(testValues);
+    Matrix4x4 matrixB = Matrix4x4(testValues);
+    Matrix4x4 matrixC = *(matrixA + matrixB);
+
+    cout << matrixC.values[0][1];
+
     return 0;
 }
 
