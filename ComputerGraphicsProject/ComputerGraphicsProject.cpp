@@ -3,546 +3,19 @@
 
 #include <iostream>
 #include <Windows.h>
-#include <list>
 #include <conio.h>
+#include <list>
+#include <vector>
+
+#include "Vector3.h"
+#include "Matrix4x4.h"
+#include "Triangle.h"
+#include "Mesh.h"
 
 using namespace std;
 
-class Vector3 {
-public:
-    // Variables
-    float x;
-    float y;
-    float z;
-
-    // Constructor
-    Vector3(float x, float y, float z)
-    {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
-
-    // Member Functions
-    void Normalize() {
-        // Store the magnitude.
-        float normalizor = magnitude;
-
-        // Normalize each variable in the struct.
-        this->x /= normalizor;
-        this->y /= normalizor;
-        this->z /= normalizor;
-    }
-
-    // Normalized property!
-    unique_ptr<Vector3> _getnormalized()
-    {        
-        // Return a pointer to a new, normalized Vector3
-        return *this / magnitude;
-    }
-    __declspec(property(get = _getnormalized)) unique_ptr<Vector3> normalized;
-
-    // Magnitude property!
-    float _getprop() {
-        return sqrt(x*x + y*y + z*z);
-    }
-    __declspec(property(get = _getprop)) const float magnitude;
-
-    // Get the cross product of this vector with another
-    unique_ptr<Vector3> Cross(Vector3 const& vec) {
-        return unique_ptr<Vector3>(new Vector3{
-            {y * vec.z - z * vec.y},
-            {z * vec.x - x * vec.z},
-            {x * vec.y - y * vec.x},
-            });
-    }
-
-    // Get the dot product of this vector with another
-    float Dot(Vector3 & vec) {
-        return (x * vec.x + y * vec.y + z * vec.z);
-    }
-
-    // Operator Implementations
-    unique_ptr<Vector3> operator + (Vector3 const& vec) {
-        return unique_ptr<Vector3>(new Vector3{
-            {x + vec.x},
-            {y + vec.y},
-            {z + vec.z},
-            });
-    }
-    unique_ptr<Vector3> operator - (Vector3 const& vec) {
-        return unique_ptr<Vector3>(new Vector3{
-            {x - vec.x},
-            {y - vec.y},
-            {z - vec.z},
-            });
-    }
-    unique_ptr<Vector3> operator * (float const& scalar) {
-        return unique_ptr<Vector3>(new Vector3{
-            {x * scalar},
-            {y * scalar},
-            {z * scalar},
-            });
-    }
-    unique_ptr<Vector3> operator / (float const& scalar) {
-        return unique_ptr<Vector3>(new Vector3{
-            {x / scalar},
-            {y / scalar},
-            {z / scalar},
-            });
-    }
-
-    // Get the distance between this and the provided vector.
-    float Distance(Vector3& vec) {
-        return (*this - vec)->magnitude;
-    }
-
-    float AngleBetween(Vector3& vecA, Vector3& vecB) {
-        auto shiftedVecA = vecA - *this;
-        auto shiftedVecB = vecB - *this;
-        return acosf(shiftedVecB->Dot(*shiftedVecA) / (shiftedVecA->magnitude * shiftedVecB->magnitude));
-    }
-
-    // Returns the distance to the point along vecT's direction that's nearest to point vecP.
-    float TangentDistance(Vector3& vecT, Vector3& vecP) {
-        return this->Distance(vecP) * cos(this->AngleBetween(*(vecT + *this), vecP));
-    }
-
-    // Returns a Vector3 representing the nearest point to vecP along vecT's path, which starts from the calling vectors position.
-    unique_ptr<Vector3> TangentPoint(Vector3& vecT, Vector3& vecP) {
-        return *(vecT + *this)->normalized * this->TangentDistance(vecT, vecP);
-    }
-};
-
-class Matrix4x4
-{
-public:
-    float values[4][4] = {};
-
-    Matrix4x4(float(&initValues)[4][4]) {
-        float* currRowA = values[0];
-        float* currRowB = initValues[0];
-        currRowA[0] = currRowB[0];
-        currRowA[1] = currRowB[1];
-        currRowA[2] = currRowB[2];
-        currRowA[3] = currRowB[3];
-
-        currRowA = values[1];
-        currRowB = initValues[1];
-        currRowA[0] = currRowB[0];
-        currRowA[1] = currRowB[1];
-        currRowA[2] = currRowB[2];
-        currRowA[3] = currRowB[3];
-
-        currRowA = values[2];
-        currRowB = initValues[2];
-        currRowA[0] = currRowB[0];
-        currRowA[1] = currRowB[1];
-        currRowA[2] = currRowB[2];
-        currRowA[3] = currRowB[3];
-
-        currRowA = values[3];
-        currRowB = initValues[3];
-        currRowA[0] = currRowB[0];
-        currRowA[1] = currRowB[1];
-        currRowA[2] = currRowB[2];
-        currRowA[3] = currRowB[3];
-    }
-
-    void Add(Matrix4x4& matrix) {
-        float* matrixValues = (float*)(matrix.values);
-
-        // Row 1
-        float* currRowA = values[0];
-        float* currRowB = &matrixValues[0];
-        currRowA[0] += currRowB[0];
-        currRowA[1] += currRowB[1];
-        currRowA[2] += currRowB[2];
-        currRowA[3] += currRowB[3];
-
-        // Row 2
-        currRowA = values[1];
-        currRowB = &matrixValues[1];
-        currRowA[0] += currRowB[0];
-        currRowA[1] += currRowB[1];
-        currRowA[2] += currRowB[2];
-        currRowA[3] += currRowB[3];
-
-        // Row 3
-        currRowA = values[2];
-        currRowB = &matrixValues[2];
-        currRowA[0] += currRowB[0];
-        currRowA[1] += currRowB[1];
-        currRowA[2] += currRowB[2];
-        currRowA[3] += currRowB[3];
-
-        // Row 4
-        currRowA = values[3];
-        currRowB = &matrixValues[3];
-        currRowA[0] += currRowB[0];
-        currRowA[1] += currRowB[1];
-        currRowA[2] += currRowB[2];
-        currRowA[3] += currRowB[3];
-    }
-    void Subtract(Matrix4x4 const& matrix) {
-        float* matrixValues = (float*)(matrix.values);
-
-        // Row 1
-        float* currRowA = values[0];
-        float* currRowB = &matrixValues[0];
-        currRowA[0] -= currRowB[0];
-        currRowA[1] -= currRowB[1];
-        currRowA[2] -= currRowB[2];
-        currRowA[3] -= currRowB[3];
-
-        // Row 2
-        currRowA = values[1];
-        currRowB = &matrixValues[1];
-        currRowA[0] -= currRowB[0];
-        currRowA[1] -= currRowB[1];
-        currRowA[2] -= currRowB[2];
-        currRowA[3] -= currRowB[3];
-
-        // Row 3
-        currRowA = values[2];
-        currRowB = &matrixValues[2];
-        currRowA[0] -= currRowB[0];
-        currRowA[1] -= currRowB[1];
-        currRowA[2] -= currRowB[2];
-        currRowA[3] -= currRowB[3];
-
-        // Row 4
-        currRowA = values[3];
-        currRowB = &matrixValues[3];
-        currRowA[0] -= currRowB[0];
-        currRowA[1] -= currRowB[1];
-        currRowA[2] -= currRowB[2];
-        currRowA[3] -= currRowB[3];
-    }
-    void Multiply(Matrix4x4 const& matrix) {
-        float* matrixValues = (float*)(matrix.values);
-        float vals[4][4] = {};
-
-        // Source matrix row 1
-        float* currCol = &matrixValues[0];
-        vals[0][0] = values[0][0] * currCol[0]
-            + values[1][0] * currCol[1]
-            + values[2][0] * currCol[2]
-            + values[3][0] * currCol[3];
-        vals[0][1] = values[0][1] * currCol[0]
-            + values[1][1] * currCol[1]
-            + values[2][1] * currCol[2]
-            + values[3][1] * currCol[3];
-        vals[0][2] = values[0][2] * currCol[0]
-            + values[1][2] * currCol[1]
-            + values[2][2] * currCol[2]
-            + values[3][2] * currCol[3];
-        vals[0][3] = values[0][3] * currCol[0]
-            + values[1][3] * currCol[1]
-            + values[2][3] * currCol[2]
-            + values[3][3] * currCol[3];
-
-        // Source matrix row 2
-        currCol = &matrixValues[1];
-        vals[1][0] = values[0][0] * currCol[0]
-            + values[1][0] * currCol[1]
-            + values[2][0] * currCol[2]
-            + values[3][0] * currCol[3];
-        vals[1][1] = values[0][1] * currCol[0]
-            + values[1][1] * currCol[1]
-            + values[2][1] * currCol[2]
-            + values[3][1] * currCol[3];
-        vals[1][2] = values[0][2] * currCol[0]
-            + values[1][2] * currCol[1]
-            + values[2][2] * currCol[2]
-            + values[3][2] * currCol[3];
-        vals[1][3] = values[0][3] * currCol[0]
-            + values[1][3] * currCol[1]
-            + values[2][3] * currCol[2]
-            + values[3][3] * currCol[3];
-
-        // Source matrix row 3
-        currCol = &matrixValues[2];
-        vals[2][0] = values[0][0] * currCol[0]
-            + values[1][0] * currCol[1]
-            + values[2][0] * currCol[2]
-            + values[3][0] * currCol[3];
-        vals[2][1] = values[0][1] * currCol[0]
-            + values[1][1] * currCol[1]
-            + values[2][1] * currCol[2]
-            + values[3][1] * currCol[3];
-        vals[2][2] = values[0][2] * currCol[0]
-            + values[1][2] * currCol[1]
-            + values[2][2] * currCol[2]
-            + values[3][2] * currCol[3];
-        vals[2][3] = values[0][3] * currCol[0]
-            + values[1][3] * currCol[1]
-            + values[2][3] * currCol[2]
-            + values[3][3] * currCol[3];
-
-        // Source matrix row 4
-        currCol = &matrixValues[3];
-        vals[3][0] = values[0][0] * currCol[0]
-            + values[1][0] * currCol[1]
-            + values[2][0] * currCol[2]
-            + values[3][0] * currCol[3];
-        vals[3][1] = values[0][1] * currCol[0]
-            + values[1][1] * currCol[1]
-            + values[2][1] * currCol[2]
-            + values[3][1] * currCol[3];
-        vals[3][2] = values[0][2] * currCol[0]
-            + values[1][2] * currCol[1]
-            + values[2][2] * currCol[2]
-            + values[3][2] * currCol[3];
-        vals[3][3] = values[0][3] * currCol[0]
-            + values[1][3] * currCol[1]
-            + values[2][3] * currCol[2]
-            + values[3][3] * currCol[3];
-
-        // Assign the calculated multiplications to this
-        float* currColLeft = values[0];
-        currCol = vals[0];
-        currColLeft[0] = currCol[0];
-        currColLeft[1] = currCol[1];
-        currColLeft[2] = currCol[2];
-        currColLeft[3] = currCol[3];
-
-        currColLeft = values[1];
-        currCol = vals[1];
-        currColLeft[0] = currCol[0];
-        currColLeft[1] = currCol[1];
-        currColLeft[2] = currCol[2];
-        currColLeft[3] = currCol[3];
-
-        currColLeft = values[2];
-        currCol = vals[2];
-        currColLeft[0] = currCol[0];
-        currColLeft[1] = currCol[1];
-        currColLeft[2] = currCol[2];
-        currColLeft[3] = currCol[3];
-
-        currColLeft = values[3];
-        currCol = vals[3];
-        currColLeft[0] = currCol[0];
-        currColLeft[1] = currCol[1];
-        currColLeft[2] = currCol[2];
-        currColLeft[3] = currCol[3];
-    }
-
-    unique_ptr<Matrix4x4> operator + (Matrix4x4 const& matrix) {
-        auto matrixValues = matrix.values;
-        float vals[4][4] = {};
-
-        float* currColAssign = vals[0];
-        float* currColLeft = values[0];
-        float const* currColRight = matrixValues[0];
-        currColAssign[0] = currColLeft[0] + currColRight[0];
-        currColAssign[1] = currColLeft[1] + currColRight[1];
-        currColAssign[2] = currColLeft[2] + currColRight[2];
-        currColAssign[3] = currColLeft[3] + currColRight[3];
-
-        currColAssign = vals[1];
-        currColLeft = values[1];
-        currColRight = matrixValues[1];
-        currColAssign[0] = currColLeft[0] + currColRight[0];
-        currColAssign[1] = currColLeft[1] + currColRight[1];
-        currColAssign[2] = currColLeft[2] + currColRight[2];
-        currColAssign[3] = currColLeft[3] + currColRight[3];
-
-        currColAssign = vals[2];
-        currColLeft = values[2];
-        currColRight = matrixValues[2];
-        currColAssign[0] = currColLeft[0] + currColRight[0];
-        currColAssign[1] = currColLeft[1] + currColRight[1];
-        currColAssign[2] = currColLeft[2] + currColRight[2];
-        currColAssign[3] = currColLeft[3] + currColRight[3];
-
-        currColAssign = vals[3];
-        currColLeft = values[3];
-        currColRight = matrixValues[3];
-        currColAssign[0] = currColLeft[0] + currColRight[0];
-        currColAssign[1] = currColLeft[1] + currColRight[1];
-        currColAssign[2] = currColLeft[2] + currColRight[2];
-        currColAssign[3] = currColLeft[3] + currColRight[3];
-
-        return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
-    }
-    unique_ptr<Matrix4x4> operator - (Matrix4x4 const& matrix) {
-        auto matrixValues = matrix.values;
-        float vals[4][4] = {};
-
-        float* currColAssign = vals[0];
-        float* currColLeft = values[0];
-        float const* currColRight = matrixValues[0];
-        currColAssign[0] = currColLeft[0] - currColRight[0];
-        currColAssign[1] = currColLeft[1] - currColRight[1];
-        currColAssign[2] = currColLeft[2] - currColRight[2];
-        currColAssign[3] = currColLeft[3] - currColRight[3];
-
-        currColAssign = vals[1];
-        currColLeft = values[1];
-        currColRight = matrixValues[1];
-        currColAssign[0] = currColLeft[0] - currColRight[0];
-        currColAssign[1] = currColLeft[1] - currColRight[1];
-        currColAssign[2] = currColLeft[2] - currColRight[2];
-        currColAssign[3] = currColLeft[3] - currColRight[3];
-
-        currColAssign = vals[2];
-        currColLeft = values[2];
-        currColRight = matrixValues[2];
-        currColAssign[0] = currColLeft[0] - currColRight[0];
-        currColAssign[1] = currColLeft[1] - currColRight[1];
-        currColAssign[2] = currColLeft[2] - currColRight[2];
-        currColAssign[3] = currColLeft[3] - currColRight[3];
-
-        currColAssign = vals[3];
-        currColLeft = values[3];
-        currColRight = matrixValues[3];
-        currColAssign[0] = currColLeft[0] - currColRight[0];
-        currColAssign[1] = currColLeft[1] - currColRight[1];
-        currColAssign[2] = currColLeft[2] - currColRight[2];
-        currColAssign[3] = currColLeft[3] - currColRight[3];
-
-        return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
-    }
-    unique_ptr<Matrix4x4> operator * (Matrix4x4 const& matrix) {
-        float* matrixValues = (float*)(matrix.values);
-        float vals[4][4] = {};
-
-        // Source matrix row 1
-        float* currCol = &matrixValues[0];
-        vals[0][0] = values[0][0] * currCol[0]
-                    + values[1][0] * currCol[1]
-                    + values[2][0] * currCol[2]
-                    + values[3][0] * currCol[3];
-        vals[0][1] = values[0][1] * currCol[0]
-                    + values[1][1] * currCol[1]
-                    + values[2][1] * currCol[2]
-                    + values[3][1] * currCol[3];
-        vals[0][2] = values[0][2] * currCol[0]
-                    + values[1][2] * currCol[1]
-                    + values[2][2] * currCol[2]
-                    + values[3][2] * currCol[3];
-        vals[0][3] = values[0][3] * currCol[0]
-                    + values[1][3] * currCol[1]
-                    + values[2][3] * currCol[2]
-                    + values[3][3] * currCol[3];
-
-        // Source matrix row 2
-        currCol = &matrixValues[1];
-        vals[1][0] = values[0][0] * currCol[0]
-                    + values[1][0] * currCol[1]
-                    + values[2][0] * currCol[2]
-                    + values[3][0] * currCol[3];
-        vals[1][1] = values[0][1] * currCol[0]
-                    + values[1][1] * currCol[1]
-                    + values[2][1] * currCol[2]
-                    + values[3][1] * currCol[3];
-        vals[1][2] = values[0][2] * currCol[0]
-                    + values[1][2] * currCol[1]
-                    + values[2][2] * currCol[2]
-                    + values[3][2] * currCol[3];
-        vals[1][3] = values[0][3] * currCol[0]
-                    + values[1][3] * currCol[1]
-                    + values[2][3] * currCol[2]
-                    + values[3][3] * currCol[3];
-
-        // Source matrix row 3
-        currCol = &matrixValues[2];
-        vals[2][0] = values[0][0] * currCol[0]
-                    + values[1][0] * currCol[1]
-                    + values[2][0] * currCol[2]
-                    + values[3][0] * currCol[3];
-        vals[2][1] = values[0][1] * currCol[0]
-                    + values[1][1] * currCol[1]
-                    + values[2][1] * currCol[2]
-                    + values[3][1] * currCol[3];
-        vals[2][2] = values[0][2] * currCol[0]
-                    + values[1][2] * currCol[1]
-                    + values[2][2] * currCol[2]
-                    + values[3][2] * currCol[3];
-        vals[2][3] = values[0][3] * currCol[0]
-                    + values[1][3] * currCol[1]
-                    + values[2][3] * currCol[2]
-                    + values[3][3] * currCol[3];
-
-        // Source matrix row 4
-        currCol = &matrixValues[3];
-        vals[3][0] = values[0][0] * currCol[0]
-                    + values[1][0] * currCol[1]
-                    + values[2][0] * currCol[2]
-                    + values[3][0] * currCol[3];
-        vals[3][1] = values[0][1] * currCol[0]
-                    + values[1][1] * currCol[1]
-                    + values[2][1] * currCol[2]
-                    + values[3][1] * currCol[3];
-        vals[3][2] = values[0][2] * currCol[0]
-                    + values[1][2] * currCol[1]
-                    + values[2][2] * currCol[2]
-                    + values[3][2] * currCol[3];
-        vals[3][3] = values[0][3] * currCol[0]
-                    + values[1][3] * currCol[1]
-                    + values[2][3] * currCol[2]
-                    + values[3][3] * currCol[3];
-
-        return unique_ptr<Matrix4x4>(new Matrix4x4(vals));
-    }
-    
-    unique_ptr<Matrix4x4> Inverse() {
-        float inverse[4][4] = {};
-        float* currColRight;
-        float currColLeft;
-
-        // Pre-compute Cached Values for A~
-        currColRight = values[1];
-        currColLeft = values[0][0];
-        float cache_1122 = currColLeft * currColRight[1];
-        float cache_1123 = currColLeft * currColRight[2];
-        float cache_1124 = currColLeft * currColRight[3];
-
-        currColLeft = values[0][1];
-        float cache_1221 = currColLeft * currColRight[0];
-        float cache_1223 = currColLeft * currColRight[2];
-        float cache_1224 = currColLeft * currColRight[3];
-
-        currColLeft = values[0][2];
-        float cache_1322 = currColLeft * currColRight[1];
-        float cache_1324 = currColLeft * currColRight[3];
-
-        currColLeft = values[0][3];
-        float cache_1421 = currColLeft * currColRight[0];
-        float cache_1422 = currColLeft * currColRight[1];
-        float cache_1423 = currColLeft * currColRight[2];
-
-        currColRight = values[3];
-        currColLeft = values[2][0];
-        float cache_3142 = currColLeft * currColRight[1];
-        float cache_3143 = currColLeft * currColRight[2];
-        float cache_3144 = currColLeft * currColRight[3];
-
-        currColLeft = values[2][1];
-        float cache_3241 = currColLeft * currColRight[0];
-        float cache_3243 = currColLeft * currColRight[2];
-        float cache_3244 = currColLeft * currColRight[3];
-
-        currColLeft = values[2][2];
-        float cache_3341 = currColLeft * currColRight[0];
-        float cache_3342 = currColLeft * currColRight[1];
-        float cache_3344 = currColLeft * currColRight[3];
-
-        currColLeft = values[2][3];
-        float cache_3441 = currColLeft * currColRight[0];
-        float cache_3442 = currColLeft * currColRight[1];
-        float cache_3443 = currColLeft * currColRight[2];
-
-
-        // Compute A~
-        // TO-DO: FIX NOTATION, MATRIX NOTATION IS [Y, X] AAAAAHHHHHH
-    }
-};
-
 // Declare & Initialize the cube
-Vector3 cubeVertices[8]{ // As viewed from -z toward +z, TY & TX axes
+Vector3::Vector3 cubeVertices[8]{ // As viewed from -z toward +z, TY & TX axes
     {0, 0, 0}, // Front bottom left
     {1, 0, 0}, // Front bottom right
     {0, 1, 0}, // Front top left
@@ -552,15 +25,13 @@ Vector3 cubeVertices[8]{ // As viewed from -z toward +z, TY & TX axes
     {0, 1, 1}, // Back top left
     {1, 1, 1}, // Back top right
 };
-
-// Declare & Initialize Camera position
-Vector3 cameraPosition{
+// Declare & Initialize Camera position & rotation
+Vector3::Vector3 cameraPosition{
     {3}, // X
     {1}, // Y
     {-3},// Z
 };
-
-Vector3 cameraLookDirection{
+Vector3::Vector3 cameraLookDirection{
     {-1},// X
     {0}, // Y
     {1}, // Z
@@ -573,23 +44,60 @@ const int screen_height = 60;
 void MoveCamera();
 void RenderFrame();
 
-int main()
-{
-    /*
+// Main Function
+int CALLBACK WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow) {
+
+    const auto pClassName = L"3DRenderer";
+    // Register Window Class
+        // Make Descriptors
+    WNDCLASSEX wc = { 0 }; // Good practice to 'zero out' a structure when init
+    wc.cbSize = sizeof(wc);
+    wc.style = CS_OWNDC; // "Buncha bullshit"
+    wc.lpfnWndProc = DefWindowProc; // "Most important" - "Long pointer to function window proc". Function that handles all messages to window
+                                    //Process determines behaviour AND looks- as draw is a part!
+    wc.cbClsExtra = 0; // How many extra bytes to allocate for us to use- we dont need these
+    wc.cbWndExtra = 0; // Extra bytes for every window of this class- we dont need these
+    wc.hIcon = nullptr;
+    wc.hCursor = nullptr;
+    wc.hbrBackground = nullptr;
+    wc.lpszMenuName = nullptr;
+    wc.lpszClassName = pClassName;
+    wc.hIconSm = nullptr;
+        // Register Window Class
+    RegisterClassEx(&wc);
+
+    // Create instance of Window Class
+    // Create a handle for the window
+    HWND hWnd = CreateWindowEx(
+        0, pClassName, // Window class
+        L"Happy Rendering Window", // Window name
+        WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, // Display options
+        200, 200, 640, 480, // Screen dimensions
+        nullptr, nullptr, hInstance, nullptr
+    );
+
+    // "Activate" the window and display it on-screen
+    ShowWindow(hWnd, SW_SHOW);
+
+    // Rendering Loop
     while (true)
     {
-        RenderFrame();
-        
+        //RenderFrame();
+
         MoveCamera();
     }
-    */
-    float testValues[4][4] = { {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, };
 
-    Matrix4x4 matrixA = Matrix4x4(testValues);
-    Matrix4x4 matrixB = Matrix4x4(testValues);
-    Matrix4x4 matrixC = *(matrixA + matrixB);
+    // Matrix Testing
+    float testValues[4][4] = { {1, 2, 3, 4},
+                                {5, 6, -7, 8},
+                                {11, -12, 13, 12},
+                                {13, 14, 15, 16}, };
+    Matrix4x4::Matrix4x4 matrixA = Matrix4x4::Matrix4x4(testValues);
 
-    cout << matrixC.values[0][1];
 
     return 0;
 }
@@ -599,34 +107,34 @@ void MoveCamera() {
 
     switch (_getch()) {
     case 'a':
-        cameraPosition = *(cameraPosition + Vector3(-0.1, 0, 0));
+        cameraPosition = *(cameraPosition + Vector3::Vector3(-0.1, 0, 0));
         break;
     case 'd':
-        cameraPosition = *(cameraPosition + Vector3(0.1, 0, 0));
+        cameraPosition = *(cameraPosition + Vector3::Vector3(0.1, 0, 0));
         break;
     case 'w':
-        cameraPosition = *(cameraPosition + Vector3(0, 0, 0.1));
+        cameraPosition = *(cameraPosition + Vector3::Vector3(0, 0, 0.1));
         break;
     case 's':
-        cameraPosition = *(cameraPosition + Vector3(0, 0, -0.1));
+        cameraPosition = *(cameraPosition + Vector3::Vector3(0, 0, -0.1));
         break;
     case ' ':
-        cameraPosition = *(cameraPosition + Vector3(0, 0.01, 0));
+        cameraPosition = *(cameraPosition + Vector3::Vector3(0, 0.01, 0));
         break;
     case 'c':
-        cameraPosition = *(cameraPosition + Vector3(0, -0.01, 0));
+        cameraPosition = *(cameraPosition + Vector3::Vector3(0, -0.01, 0));
         break;
     case 'i':
-        cameraLookDirection = *(cameraLookDirection + Vector3(0, 0.1, 0));
+        cameraLookDirection = *(cameraLookDirection + Vector3::Vector3(0, 0.1, 0));
         break;
     case 'j':
-        cameraLookDirection = *(cameraLookDirection + Vector3(-0.1, 0, 0));
+        cameraLookDirection = *(cameraLookDirection + Vector3::Vector3(-0.1, 0, 0));
         break;
     case 'k':
-        cameraLookDirection = *(cameraLookDirection + Vector3(0, -0.1, 0));
+        cameraLookDirection = *(cameraLookDirection + Vector3::Vector3(0, -0.1, 0));
         break;
     case 'l':
-        cameraLookDirection = *(cameraLookDirection + Vector3(0.1, 0, 0));
+        cameraLookDirection = *(cameraLookDirection + Vector3::Vector3(0.1, 0, 0));
         break;
     }
 

@@ -1,12 +1,35 @@
 ﻿  ComputerGraphicsProject.cpp
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(542,1): error C2111: '+': pointer addition requires integral operand
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(604,63): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(607,62): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(610,62): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(613,63): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(616,63): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(619,64): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(622,72): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(625,73): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(628,73): warning C4305: 'argument': truncation from 'double' to 'float'
-D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\ComputerGraphicsProject\ComputerGraphicsProject.cpp(631,72): warning C4305: 'argument': truncation from 'double' to 'float'
+libcpmtd.lib(StlCompareStringA.obj) : error LNK2001: unresolved external symbol _free_dbg
+libcpmtd.lib(StlLCMapStringA.obj) : error LNK2001: unresolved external symbol _free_dbg
+libcpmtd.lib(wlocale.obj) : error LNK2001: unresolved external symbol _free_dbg
+libcpmtd.lib(xlocale.obj) : error LNK2001: unresolved external symbol _free_dbg
+libcpmtd.lib(xwcsxfrm.obj) : error LNK2001: unresolved external symbol _free_dbg
+ComputerGraphicsProject.obj : error LNK2001: unresolved external symbol _free_dbg
+libcpmtd.lib(locale0.obj) : error LNK2001: unresolved external symbol _free_dbg
+libcpmtd.lib(cout.obj) : error LNK2001: unresolved external symbol _free_dbg
+libcpmtd.lib(locale.obj) : error LNK2001: unresolved external symbol _free_dbg
+libcpmtd.lib(StlCompareStringA.obj) : error LNK2001: unresolved external symbol _malloc_dbg
+libcpmtd.lib(StlLCMapStringA.obj) : error LNK2001: unresolved external symbol _malloc_dbg
+libcpmtd.lib(wlocale.obj) : error LNK2001: unresolved external symbol _malloc_dbg
+libcpmtd.lib(xlocale.obj) : error LNK2001: unresolved external symbol _malloc_dbg
+libcpmtd.lib(xwcsxfrm.obj) : error LNK2001: unresolved external symbol _malloc_dbg
+ComputerGraphicsProject.obj : error LNK2001: unresolved external symbol _malloc_dbg
+libcpmtd.lib(locale0.obj) : error LNK2001: unresolved external symbol _malloc_dbg
+libcpmtd.lib(cout.obj) : error LNK2001: unresolved external symbol _malloc_dbg
+libcpmtd.lib(locale.obj) : error LNK2001: unresolved external symbol _malloc_dbg
+libcpmtd.lib(xlocale.obj) : error LNK2001: unresolved external symbol _CrtDbgReport
+ComputerGraphicsProject.obj : error LNK2001: unresolved external symbol _CrtDbgReport
+libcpmtd.lib(cout.obj) : error LNK2001: unresolved external symbol _CrtDbgReport
+libcpmtd.lib(locale.obj) : error LNK2001: unresolved external symbol _CrtDbgReport
+libcpmtd.lib(wlocale.obj) : error LNK2001: unresolved external symbol _CrtDbgReport
+libcpmtd.lib(_tolower.obj) : error LNK2019: unresolved external symbol _calloc_dbg referenced in function _Getctype
+libcpmtd.lib(locale.obj) : error LNK2001: unresolved external symbol _calloc_dbg
+libcpmtd.lib(wlocale.obj) : error LNK2001: unresolved external symbol _calloc_dbg
+libcpmtd.lib(xlocale.obj) : error LNK2001: unresolved external symbol _calloc_dbg
+libcpmtd.lib(_tolower.obj) : error LNK2019: unresolved external symbol _wcsdup_dbg referenced in function _Getctype
+libcpmtd.lib(xstrcoll.obj) : error LNK2001: unresolved external symbol _wcsdup_dbg
+libcpmtd.lib(locale.obj) : error LNK2019: unresolved external symbol _realloc_dbg referenced in function "private: static void __cdecl std::locale::_Locimp::_Locimp_Addfac(class std::locale::_Locimp *,class std::locale::facet *,unsigned __int64)" (?_Locimp_Addfac@_Locimp@locale@std@@CAXPEAV123@PEAVfacet@23@_K@Z)
+libcpmtd.lib(StlLCMapStringA.obj) : error LNK2019: unresolved external symbol _CrtDbgReportW referenced in function _freea_crt
+libcpmtd.lib(xmbtowc.obj) : error LNK2001: unresolved external symbol _CrtDbgReportW
+libcpmtd.lib(StlCompareStringA.obj) : error LNK2001: unresolved external symbol _CrtDbgReportW
+D:\Users\Tanner\Documents\GitHub\ComputerGraphicsProject\x64\Debug\ComputerGraphicsProject.exe : fatal error LNK1120: 7 unresolved externals
